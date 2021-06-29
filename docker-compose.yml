@@ -19,7 +19,6 @@ services:
             target: dev
         ports:
             - 3000:3000
-            - 4009:9222
         volumes:
             - ./src:/app/src
             - ./keystone.ts:/app/keystone.ts
