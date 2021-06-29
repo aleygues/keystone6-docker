@@ -1,0 +1,31 @@
+{
+  "name": "keystone6-docker",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "watch": "npm-watch",
+    "dev": "keystone-next dev",
+    "docker": "docker-compose up --build",
+    "start": "keystone-next start",
+    "build": "keystone-next build",
+    "postinstall": "if-env SKIP_POSTINSTALL=1 && echo 'skipped' || keystone-next postinstall"
+  },
+  "dependencies": {
+    "@keystone-next/auth": "^28.0.0",
+    "@keystone-next/fields": "^11.0.0",
+    "@keystone-next/fields-document": "^7.0.0",
+    "@keystone-next/keystone": "^21.0.0",
+    "if-env": "^1.0.4",
+    "npm-watch": "0.10.0",
+    "typescript": "^4.3.2"
+  },
+  "watch": {
+    "dev": {
+      "patterns": [
+        "src",
+        "."
+      ],
+      "extensions": "ts"
+    }
+  }
+}
