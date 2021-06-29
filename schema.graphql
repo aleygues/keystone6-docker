@@ -1,33 +1,148 @@
 """
  A keystone list
 """
-type User {
+type Task {
+  id: ID!
+  label: String
+  priority: TaskPriorityType
+  isComplete: Boolean
+  assignedTo: Person
+  finishBy: String
+}
+
+enum TaskPriorityType {
+  low
+  medium
+  high
+}
+
+input TaskWhereInput {
+  AND: [TaskWhereInput!]
+  OR: [TaskWhereInput!]
+  id: ID
+  id_not: ID
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  label: String
+  label_not: String
+  label_contains: String
+  label_not_contains: String
+  label_in: [String]
+  label_not_in: [String]
+  priority: TaskPriorityType
+  priority_not: TaskPriorityType
+  priority_in: [TaskPriorityType]
+  priority_not_in: [TaskPriorityType]
+  isComplete: Boolean
+  isComplete_not: Boolean
+  assignedTo: PersonWhereInput
+  assignedTo_is_null: Boolean
+  finishBy: String
+  finishBy_not: String
+  finishBy_lt: String
+  finishBy_lte: String
+  finishBy_gt: String
+  finishBy_gte: String
+  finishBy_in: [String]
+  finishBy_not_in: [String]
+}
+
+input TaskWhereUniqueInput {
+  id: ID
+}
+
+enum SortTasksBy {
+  id_ASC
+  id_DESC
+  label_ASC
+  label_DESC
+  priority_ASC
+  priority_DESC
+  isComplete_ASC
+  isComplete_DESC
+  finishBy_ASC
+  finishBy_DESC
+}
+
+input TaskOrderByInput {
+  id: OrderDirection
+  label: OrderDirection
+  priority: OrderDirection
+  isComplete: OrderDirection
+  finishBy: OrderDirection
+}
+
+enum OrderDirection {
+  asc
+  desc
+}
+
+input TaskUpdateInput {
+  label: String
+  priority: TaskPriorityType
+  isComplete: Boolean
+  assignedTo: PersonRelateToOneInput
+  finishBy: String
+}
+
+input PersonRelateToOneInput {
+  create: PersonCreateInput
+  connect: PersonWhereUniqueInput
+  disconnect: PersonWhereUniqueInput
+  disconnectAll: Boolean
+}
+
+input TasksUpdateInput {
+  id: ID!
+  data: TaskUpdateInput
+}
+
+input TaskCreateInput {
+  label: String
+  priority: TaskPriorityType
+  isComplete: Boolean
+  assignedTo: PersonRelateToOneInput
+  finishBy: String
+}
+
+input TasksCreateInput {
+  data: TaskCreateInput
+}
+
+"""
+ A keystone list
+"""
+type Person {
   id: ID!
   name: String
   email: String
   password: PasswordState
-  posts(
-    where: PostWhereInput! = {}
+  tasks(
+    where: TaskWhereInput! = {}
     search: String
-    sortBy: [SortPostsBy!]
+    sortBy: [SortTasksBy!]
       @deprecated(reason: "sortBy has been deprecated in favour of orderBy")
-    orderBy: [PostOrderByInput!]! = []
+    orderBy: [TaskOrderByInput!]! = []
     first: Int
     skip: Int! = 0
-  ): [Post!]
-  _postsMeta(
-    where: PostWhereInput! = {}
+  ): [Task!]
+  _tasksMeta(
+    where: TaskWhereInput! = {}
     search: String
-    sortBy: [SortPostsBy!]
+    sortBy: [SortTasksBy!]
       @deprecated(reason: "sortBy has been deprecated in favour of orderBy")
-    orderBy: [PostOrderByInput!]! = []
+    orderBy: [TaskOrderByInput!]! = []
     first: Int
     skip: Int! = 0
   ): _QueryMeta
     @deprecated(
-      reason: "This query will be removed in a future version. Please use postsCount instead."
+      reason: "This query will be removed in a future version. Please use tasksCount instead."
     )
-  postsCount(where: PostWhereInput! = {}): Int
+  tasksCount(where: TaskWhereInput! = {}): Int
 }
 
 type PasswordState {
@@ -38,9 +153,9 @@ type _QueryMeta {
   count: Int
 }
 
-input UserWhereInput {
-  AND: [UserWhereInput!]
-  OR: [UserWhereInput!]
+input PersonWhereInput {
+  AND: [PersonWhereInput!]
+  OR: [PersonWhereInput!]
   id: ID
   id_not: ID
   id_lt: ID
@@ -53,36 +168,12 @@ input UserWhereInput {
   name_not: String
   name_contains: String
   name_not_contains: String
-  name_starts_with: String
-  name_not_starts_with: String
-  name_ends_with: String
-  name_not_ends_with: String
-  name_i: String
-  name_not_i: String
-  name_contains_i: String
-  name_not_contains_i: String
-  name_starts_with_i: String
-  name_not_starts_with_i: String
-  name_ends_with_i: String
-  name_not_ends_with_i: String
   name_in: [String]
   name_not_in: [String]
   email: String
   email_not: String
   email_contains: String
   email_not_contains: String
-  email_starts_with: String
-  email_not_starts_with: String
-  email_ends_with: String
-  email_not_ends_with: String
-  email_i: String
-  email_not_i: String
-  email_contains_i: String
-  email_not_contains_i: String
-  email_starts_with_i: String
-  email_not_starts_with_i: String
-  email_ends_with_i: String
-  email_not_ends_with_i: String
   email_in: [String]
   email_not_in: [String]
   password_is_set: Boolean
@@ -90,25 +181,25 @@ input UserWhereInput {
   """
    condition must be true for all nodes
   """
-  posts_every: PostWhereInput
+  tasks_every: TaskWhereInput
 
   """
    condition must be true for at least 1 node
   """
-  posts_some: PostWhereInput
+  tasks_some: TaskWhereInput
 
   """
    condition must be false for all nodes
   """
-  posts_none: PostWhereInput
+  tasks_none: TaskWhereInput
 }
 
-input UserWhereUniqueInput {
+input PersonWhereUniqueInput {
   id: ID
   email: String
 }
 
-enum SortUsersBy {
+enum SortPeopleBy {
   id_ASC
   id_DESC
   name_ASC
@@ -117,317 +208,40 @@ enum SortUsersBy {
   email_DESC
 }
 
-input UserOrderByInput {
+input PersonOrderByInput {
   id: OrderDirection
   name: OrderDirection
   email: OrderDirection
 }
 
-enum OrderDirection {
-  asc
-  desc
-}
-
-input UserUpdateInput {
+input PersonUpdateInput {
   name: String
   email: String
   password: String
-  posts: PostRelateToManyInput
+  tasks: TaskRelateToManyInput
 }
 
-input PostRelateToManyInput {
-  create: [PostCreateInput]
-  connect: [PostWhereUniqueInput]
-  disconnect: [PostWhereUniqueInput]
+input TaskRelateToManyInput {
+  create: [TaskCreateInput]
+  connect: [TaskWhereUniqueInput]
+  disconnect: [TaskWhereUniqueInput]
   disconnectAll: Boolean
 }
 
-input UsersUpdateInput {
+input PeopleUpdateInput {
   id: ID!
-  data: UserUpdateInput
+  data: PersonUpdateInput
 }
 
-input UserCreateInput {
+input PersonCreateInput {
   name: String
   email: String
   password: String
-  posts: PostRelateToManyInput
+  tasks: TaskRelateToManyInput
 }
 
-input UsersCreateInput {
-  data: UserCreateInput
-}
-
-"""
- A keystone list
-"""
-type Post {
-  id: ID!
-  title: String
-  status: String
-  content: Post_content_DocumentField
-  publishDate: String
-  author: User
-  tags(
-    where: TagWhereInput! = {}
-    search: String
-    sortBy: [SortTagsBy!]
-      @deprecated(reason: "sortBy has been deprecated in favour of orderBy")
-    orderBy: [TagOrderByInput!]! = []
-    first: Int
-    skip: Int! = 0
-  ): [Tag!]
-  _tagsMeta(
-    where: TagWhereInput! = {}
-    search: String
-    sortBy: [SortTagsBy!]
-      @deprecated(reason: "sortBy has been deprecated in favour of orderBy")
-    orderBy: [TagOrderByInput!]! = []
-    first: Int
-    skip: Int! = 0
-  ): _QueryMeta
-    @deprecated(
-      reason: "This query will be removed in a future version. Please use tagsCount instead."
-    )
-  tagsCount(where: TagWhereInput! = {}): Int
-}
-
-type Post_content_DocumentField {
-  document(hydrateRelationships: Boolean! = false): JSON!
-}
-
-input PostWhereInput {
-  AND: [PostWhereInput!]
-  OR: [PostWhereInput!]
-  id: ID
-  id_not: ID
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  title: String
-  title_not: String
-  title_contains: String
-  title_not_contains: String
-  title_starts_with: String
-  title_not_starts_with: String
-  title_ends_with: String
-  title_not_ends_with: String
-  title_i: String
-  title_not_i: String
-  title_contains_i: String
-  title_not_contains_i: String
-  title_starts_with_i: String
-  title_not_starts_with_i: String
-  title_ends_with_i: String
-  title_not_ends_with_i: String
-  title_in: [String]
-  title_not_in: [String]
-  status: String
-  status_not: String
-  status_in: [String]
-  status_not_in: [String]
-  publishDate: String
-  publishDate_not: String
-  publishDate_lt: String
-  publishDate_lte: String
-  publishDate_gt: String
-  publishDate_gte: String
-  publishDate_in: [String]
-  publishDate_not_in: [String]
-  author: UserWhereInput
-  author_is_null: Boolean
-
-  """
-   condition must be true for all nodes
-  """
-  tags_every: TagWhereInput
-
-  """
-   condition must be true for at least 1 node
-  """
-  tags_some: TagWhereInput
-
-  """
-   condition must be false for all nodes
-  """
-  tags_none: TagWhereInput
-}
-
-input PostWhereUniqueInput {
-  id: ID
-}
-
-enum SortPostsBy {
-  id_ASC
-  id_DESC
-  title_ASC
-  title_DESC
-  status_ASC
-  status_DESC
-  publishDate_ASC
-  publishDate_DESC
-}
-
-input PostOrderByInput {
-  id: OrderDirection
-  title: OrderDirection
-  status: OrderDirection
-  publishDate: OrderDirection
-}
-
-input PostUpdateInput {
-  title: String
-  status: String
-  content: JSON
-  publishDate: String
-  author: UserRelateToOneInput
-  tags: TagRelateToManyInput
-}
-
-input UserRelateToOneInput {
-  create: UserCreateInput
-  connect: UserWhereUniqueInput
-  disconnect: UserWhereUniqueInput
-  disconnectAll: Boolean
-}
-
-input TagRelateToManyInput {
-  create: [TagCreateInput]
-  connect: [TagWhereUniqueInput]
-  disconnect: [TagWhereUniqueInput]
-  disconnectAll: Boolean
-}
-
-input PostsUpdateInput {
-  id: ID!
-  data: PostUpdateInput
-}
-
-input PostCreateInput {
-  title: String
-  status: String
-  content: JSON
-  publishDate: String
-  author: UserRelateToOneInput
-  tags: TagRelateToManyInput
-}
-
-input PostsCreateInput {
-  data: PostCreateInput
-}
-
-"""
- A keystone list
-"""
-type Tag {
-  id: ID!
-  name: String
-  posts(
-    where: PostWhereInput! = {}
-    search: String
-    sortBy: [SortPostsBy!]
-      @deprecated(reason: "sortBy has been deprecated in favour of orderBy")
-    orderBy: [PostOrderByInput!]! = []
-    first: Int
-    skip: Int! = 0
-  ): [Post!]
-  _postsMeta(
-    where: PostWhereInput! = {}
-    search: String
-    sortBy: [SortPostsBy!]
-      @deprecated(reason: "sortBy has been deprecated in favour of orderBy")
-    orderBy: [PostOrderByInput!]! = []
-    first: Int
-    skip: Int! = 0
-  ): _QueryMeta
-    @deprecated(
-      reason: "This query will be removed in a future version. Please use postsCount instead."
-    )
-  postsCount(where: PostWhereInput! = {}): Int
-}
-
-input TagWhereInput {
-  AND: [TagWhereInput!]
-  OR: [TagWhereInput!]
-  id: ID
-  id_not: ID
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  name: String
-  name_not: String
-  name_contains: String
-  name_not_contains: String
-  name_starts_with: String
-  name_not_starts_with: String
-  name_ends_with: String
-  name_not_ends_with: String
-  name_i: String
-  name_not_i: String
-  name_contains_i: String
-  name_not_contains_i: String
-  name_starts_with_i: String
-  name_not_starts_with_i: String
-  name_ends_with_i: String
-  name_not_ends_with_i: String
-  name_in: [String]
-  name_not_in: [String]
-
-  """
-   condition must be true for all nodes
-  """
-  posts_every: PostWhereInput
-
-  """
-   condition must be true for at least 1 node
-  """
-  posts_some: PostWhereInput
-
-  """
-   condition must be false for all nodes
-  """
-  posts_none: PostWhereInput
-}
-
-input TagWhereUniqueInput {
-  id: ID
-}
-
-enum SortTagsBy {
-  id_ASC
-  id_DESC
-  name_ASC
-  name_DESC
-}
-
-input TagOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-}
-
-input TagUpdateInput {
-  name: String
-  posts: PostRelateToManyInput
-}
-
-input TagsUpdateInput {
-  id: ID!
-  data: TagUpdateInput
-}
-
-input TagCreateInput {
-  name: String
-  posts: PostRelateToManyInput
-}
-
-input TagsCreateInput {
-  data: TagCreateInput
+input PeopleCreateInput {
+  data: PersonCreateInput
 }
 
 """
@@ -440,116 +254,86 @@ scalar JSON
 
 type Mutation {
   """
-   Create a single User item.
+   Create a single Task item.
   """
-  createUser(data: UserCreateInput): User
+  createTask(data: TaskCreateInput): Task
 
   """
-   Create multiple User items.
+   Create multiple Task items.
   """
-  createUsers(data: [UsersCreateInput]): [User]
+  createTasks(data: [TasksCreateInput]): [Task]
 
   """
-   Update a single User item by ID.
+   Update a single Task item by ID.
   """
-  updateUser(id: ID!, data: UserUpdateInput): User
+  updateTask(id: ID!, data: TaskUpdateInput): Task
 
   """
-   Update multiple User items by ID.
+   Update multiple Task items by ID.
   """
-  updateUsers(data: [UsersUpdateInput]): [User]
+  updateTasks(data: [TasksUpdateInput]): [Task]
 
   """
-   Delete a single User item by ID.
+   Delete a single Task item by ID.
   """
-  deleteUser(id: ID!): User
+  deleteTask(id: ID!): Task
 
   """
-   Delete multiple User items by ID.
+   Delete multiple Task items by ID.
   """
-  deleteUsers(ids: [ID!]): [User]
+  deleteTasks(ids: [ID!]): [Task]
 
   """
-   Create a single Post item.
+   Create a single Person item.
   """
-  createPost(data: PostCreateInput): Post
+  createPerson(data: PersonCreateInput): Person
 
   """
-   Create multiple Post items.
+   Create multiple Person items.
   """
-  createPosts(data: [PostsCreateInput]): [Post]
+  createPeople(data: [PeopleCreateInput]): [Person]
 
   """
-   Update a single Post item by ID.
+   Update a single Person item by ID.
   """
-  updatePost(id: ID!, data: PostUpdateInput): Post
+  updatePerson(id: ID!, data: PersonUpdateInput): Person
 
   """
-   Update multiple Post items by ID.
+   Update multiple Person items by ID.
   """
-  updatePosts(data: [PostsUpdateInput]): [Post]
+  updatePeople(data: [PeopleUpdateInput]): [Person]
 
   """
-   Delete a single Post item by ID.
+   Delete a single Person item by ID.
   """
-  deletePost(id: ID!): Post
+  deletePerson(id: ID!): Person
 
   """
-   Delete multiple Post items by ID.
+   Delete multiple Person items by ID.
   """
-  deletePosts(ids: [ID!]): [Post]
-
-  """
-   Create a single Tag item.
-  """
-  createTag(data: TagCreateInput): Tag
-
-  """
-   Create multiple Tag items.
-  """
-  createTags(data: [TagsCreateInput]): [Tag]
-
-  """
-   Update a single Tag item by ID.
-  """
-  updateTag(id: ID!, data: TagUpdateInput): Tag
-
-  """
-   Update multiple Tag items by ID.
-  """
-  updateTags(data: [TagsUpdateInput]): [Tag]
-
-  """
-   Delete a single Tag item by ID.
-  """
-  deleteTag(id: ID!): Tag
-
-  """
-   Delete multiple Tag items by ID.
-  """
-  deleteTags(ids: [ID!]): [Tag]
-  authenticateUserWithPassword(
+  deletePeople(ids: [ID!]): [Person]
+  authenticatePersonWithPassword(
     email: String!
     password: String!
-  ): UserAuthenticationWithPasswordResult!
-  createInitialUser(
-    data: CreateInitialUserInput!
-  ): UserAuthenticationWithPasswordSuccess!
+  ): PersonAuthenticationWithPasswordResult!
+  createInitialPerson(
+    data: CreateInitialPersonInput!
+  ): PersonAuthenticationWithPasswordSuccess!
   endSession: Boolean!
 }
 
-union AuthenticatedItem = User
+union AuthenticatedItem = Person
 
-union UserAuthenticationWithPasswordResult =
-    UserAuthenticationWithPasswordSuccess
-  | UserAuthenticationWithPasswordFailure
+union PersonAuthenticationWithPasswordResult =
+    PersonAuthenticationWithPasswordSuccess
+  | PersonAuthenticationWithPasswordFailure
 
-type UserAuthenticationWithPasswordSuccess {
+type PersonAuthenticationWithPasswordSuccess {
   sessionToken: String!
-  item: User!
+  item: Person!
 }
 
-type UserAuthenticationWithPasswordFailure {
+type PersonAuthenticationWithPasswordFailure {
   code: PasswordAuthErrorCode!
   message: String!
 }
@@ -562,7 +346,7 @@ enum PasswordAuthErrorCode {
   SECRET_MISMATCH
 }
 
-input CreateInitialUserInput {
+input CreateInitialPersonInput {
   name: String
   email: String
   password: String
@@ -570,109 +354,74 @@ input CreateInitialUserInput {
 
 type Query {
   """
-   Search for all User items which match the where clause.
+   Search for all Task items which match the where clause.
   """
-  allUsers(
-    where: UserWhereInput! = {}
+  allTasks(
+    where: TaskWhereInput! = {}
     search: String
-    sortBy: [SortUsersBy!]
+    sortBy: [SortTasksBy!]
       @deprecated(reason: "sortBy has been deprecated in favour of orderBy")
-    orderBy: [UserOrderByInput!]! = []
+    orderBy: [TaskOrderByInput!]! = []
     first: Int
     skip: Int! = 0
-  ): [User!]
+  ): [Task!]
 
   """
-   Search for the User item with the matching ID.
+   Search for the Task item with the matching ID.
   """
-  User(where: UserWhereUniqueInput!): User
+  Task(where: TaskWhereUniqueInput!): Task
 
   """
-   Perform a meta-query on all User items which match the where clause.
+   Perform a meta-query on all Task items which match the where clause.
   """
-  _allUsersMeta(
-    where: UserWhereInput! = {}
+  _allTasksMeta(
+    where: TaskWhereInput! = {}
     search: String
-    sortBy: [SortUsersBy!]
+    sortBy: [SortTasksBy!]
       @deprecated(reason: "sortBy has been deprecated in favour of orderBy")
-    orderBy: [UserOrderByInput!]! = []
-    first: Int
-    skip: Int! = 0
-  ): _QueryMeta
-    @deprecated(
-      reason: "This query will be removed in a future version. Please use usersCount instead."
-    )
-  usersCount(where: UserWhereInput! = {}): Int
-
-  """
-   Search for all Post items which match the where clause.
-  """
-  allPosts(
-    where: PostWhereInput! = {}
-    search: String
-    sortBy: [SortPostsBy!]
-      @deprecated(reason: "sortBy has been deprecated in favour of orderBy")
-    orderBy: [PostOrderByInput!]! = []
-    first: Int
-    skip: Int! = 0
-  ): [Post!]
-
-  """
-   Search for the Post item with the matching ID.
-  """
-  Post(where: PostWhereUniqueInput!): Post
-
-  """
-   Perform a meta-query on all Post items which match the where clause.
-  """
-  _allPostsMeta(
-    where: PostWhereInput! = {}
-    search: String
-    sortBy: [SortPostsBy!]
-      @deprecated(reason: "sortBy has been deprecated in favour of orderBy")
-    orderBy: [PostOrderByInput!]! = []
+    orderBy: [TaskOrderByInput!]! = []
     first: Int
     skip: Int! = 0
   ): _QueryMeta
     @deprecated(
-      reason: "This query will be removed in a future version. Please use postsCount instead."
+      reason: "This query will be removed in a future version. Please use tasksCount instead."
     )
-  postsCount(where: PostWhereInput! = {}): Int
+  tasksCount(where: TaskWhereInput! = {}): Int
 
   """
-   Search for all Tag items which match the where clause.
+   Search for all Person items which match the where clause.
   """
-  allTags(
-    where: TagWhereInput! = {}
+  allPeople(
+    where: PersonWhereInput! = {}
     search: String
-    sortBy: [SortTagsBy!]
+    sortBy: [SortPeopleBy!]
       @deprecated(reason: "sortBy has been deprecated in favour of orderBy")
-    orderBy: [TagOrderByInput!]! = []
+    orderBy: [PersonOrderByInput!]! = []
     first: Int
     skip: Int! = 0
-  ): [Tag!]
+  ): [Person!]
 
   """
-   Search for the Tag item with the matching ID.
+   Search for the Person item with the matching ID.
   """
-  Tag(where: TagWhereUniqueInput!): Tag
+  Person(where: PersonWhereUniqueInput!): Person
 
   """
-   Perform a meta-query on all Tag items which match the where clause.
+   Perform a meta-query on all Person items which match the where clause.
   """
-  _allTagsMeta(
-    where: TagWhereInput! = {}
+  _allPeopleMeta(
+    where: PersonWhereInput! = {}
     search: String
-    sortBy: [SortTagsBy!]
+    sortBy: [SortPeopleBy!]
       @deprecated(reason: "sortBy has been deprecated in favour of orderBy")
-    orderBy: [TagOrderByInput!]! = []
+    orderBy: [PersonOrderByInput!]! = []
     first: Int
     skip: Int! = 0
   ): _QueryMeta
     @deprecated(
-      reason: "This query will be removed in a future version. Please use tagsCount instead."
+      reason: "This query will be removed in a future version. Please use peopleCount instead."
     )
-  tagsCount(where: TagWhereInput! = {}): Int
+  peopleCount(where: PersonWhereInput! = {}): Int
   authenticatedItem: AuthenticatedItem
   keystone: KeystoneMeta!
 }
