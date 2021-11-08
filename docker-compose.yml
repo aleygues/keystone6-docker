@@ -13,6 +13,7 @@ services:
         build:
             context: .
             target: dev
+        restart: on-failure
         ports:
             - 3000:3000
         volumes:

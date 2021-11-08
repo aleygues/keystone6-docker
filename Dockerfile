@@ -11,7 +11,7 @@ WORKDIR /app
 COPY package.json package.json
 COPY tsconfig.json tsconfig.json
 COPY --from=dependencies /app/node_modules node_modules
-CMD yarn watch
+CMD yarn dev
 
 FROM node:16-alpine AS prod
 
