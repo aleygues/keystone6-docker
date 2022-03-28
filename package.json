@@ -1,22 +1,17 @@
 {
   "name": "keystone6-docker",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "scripts": {
-    "dev": "keystone-next postinstall --fix && keystone-next prisma db push --accept-data-loss && keystone-next dev",
+    "dev": "keystone postinstall --fix && keystone prisma db push --accept-data-loss && keystone dev",
     "docker": "docker-compose up --build",
-    "start": "keystone-next start",
-    "build": "keystone-next build",
-    "postinstall": "if-env SKIP_POSTINSTALL=1 && echo 'skipped' || keystone-next postinstall"
+    "start": "keystone start",
+    "build": "keystone build",
+    "postinstall": "if-env SKIP_POSTINSTALL=1 && echo 'skipped' || keystone postinstall"
   },
   "dependencies": {
-    "@keystone-next/admin-ui-utils": "6.0.0",
-    "@keystone-next/auth": "35.0.0",
-    "@keystone-next/fields": "15.0.0",
-    "@keystone-next/keystone": "27.0.1",
-    "@keystone-next/session-store-redis": "7.0.0",
-    "@keystone-next/types": "25.0.0",
-    "@keystone-next/utils": "2.0.0",
+    "@keystone-6/auth": "^2.0.0",
+    "@keystone-6/core": "^1.1.0",
     "if-env": "^1.0.4",
     "typescript": "^4.3.2"
   }
